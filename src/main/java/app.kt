@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.http4k.client.ApacheClient
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -11,23 +14,27 @@ import org.http4k.format.Jackson.asJsonValue
 import org.http4k.format.Jackson.asPrettyJsonString
 import org.http4k.format.Jackson.json
 
+data class AJsonObject(val name: String, val count: Int)
+
+val mapper = jacksonObjectMapper()
+
 
 fun main(args: Array<String>) {
     println ("poopsdsds chute")
 
-    val request = Request(Method.GET, "https://www.reddit.com/user/tankorsmash.json")
-    val client = ApacheClient()
+//    val request = Request(Method.GET, "https://www.reddit.com/user/tankorsmash.json")
+//    val client = ApacheClient()
+//
+//    val response: Response = client(request)
+//    val json_data = response.body.toString().asJsonObject()
 
-    val response: Response = client(request)
-    val json_data = response.body.toString().asJsonObject()
+    val json_data: JsonNode = listOf(
+            "name" to "string val".asJsonValue(),
+            "count" to 123.asJsonValue()
+    ).asJsonObject()
+    val cls : AJsonObject = mapper.readValue(json_data.asPrettyJsonString())
 
-//    val json_data =
-//            listOf(
-//            "string key" to "string val".asJsonValue(),
-//            "123" to 123.asJsonValue()
-//    ).asJsonObject()
-
-//    println(json_data["string key"])
+    println(json_data["name"].asPrettyJsonString())
 
     println("the length of response is ${json_data.asPrettyJsonString()}")
 
